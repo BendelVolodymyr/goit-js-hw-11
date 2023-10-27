@@ -10,20 +10,19 @@ const formEl = document.querySelector('#search-form');
 const buttonLoadEl = document.querySelector('.load-more');
 const galleryEl = document.querySelector('.gallery');
 
-let resultPage = 0;
+let resultPage = 1;
 
-function onSearc(event) {
+async function onSearc(event) {
     event.preventDefault();
-    
-    console.log(event)
     const formValue = formEl.elements.searchQuery.value;
     if (formValue.length == 0) return alert('Форма не може бути пуста');
-    resultPage += 1;
-    getSearch(formValue, resultPage).then(data => {
-    const arrayData = data.data.hits;
+    
+    await getSearch(formValue, resultPage).then(data => {
+        const arrayData = data.data.hits;
+        console.log(data)
     if (arrayData.length == 0) return Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.");
-    Notiflix.Notify.success('true');
-    return createDomEl(arrayData);
+    Notiflix.Notify.success('Success: Photo found');
+    createDomEl(arrayData);
 }
 )
     .catch(err => Notiflix.Notify.failure(err.message))
@@ -34,10 +33,10 @@ formEl.addEventListener('submit', onSearc);
 
 
 function createDomEl(arrayData) { 
-    
-    return galleryEl.innerHTML = arrayData.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
+    resultPage += 1;
+  galleryEl.innerHTML = arrayData.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
     `<div class="photo-card">
- <a href="${largeImageURL}" class="gallery__link"  ><img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" /></a>
+        <a class="gallery__link" href="${largeImageURL}"  ><img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" /></a>
   <div class="info">
     <p class="info-item">
       <b>likes:${likes}</b>
@@ -53,17 +52,16 @@ function createDomEl(arrayData) {
     </p>
   </div>
 </div>`).join('');
-    
+  var lightbox = new SimpleLightbox('.gallery a', {
+    sourceAttr: 'href',
+    overlayOpacity: 0.4, 
+    animationSpeed: 500, 
+    captionsData: 'alt', 
+    captionPosition: 'bottom', 
+    captionDelay: 250, 
+});
+  
     
 }
-
-var lightbox = new SimpleLightbox('.gallery.photo-card a', {
-    sourceAttr: 'href', // завантаження файла з ...
-    overlayOpacity: 0.4, // прозорість фону
-    animationSpeed: 500, // Анімація перемикання слайдів (швидкість)
-    captionsData: 'alt', // додаємо з опису
-    captionPosition: 'bottom', // позиція
-    captionDelay: 250, // затримка опису '250 ms'
-});
 
 
