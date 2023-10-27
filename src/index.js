@@ -11,18 +11,19 @@ const buttonLoadEl = document.querySelector('.load-more');
 const galleryEl = document.querySelector('.gallery');
 
 let resultPage = 1;
+let formValue = '';
 
 async function onSearc(event) {
     event.preventDefault();
-    const formValue = formEl.elements.searchQuery.value;
+     formValue = formEl.elements.searchQuery.value;
     if (formValue.length == 0) return alert('Форма не може бути пуста');
     
     await getSearch(formValue, resultPage).then(data => {
         const arrayData = data.data.hits;
-        console.log(data)
     if (arrayData.length == 0) return Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.");
     Notiflix.Notify.success('Success: Photo found');
-    createDomEl(arrayData);
+        createDomEl(arrayData);
+        buttonLoadEl.classList.remove('is-hidden');
 }
 )
     .catch(err => Notiflix.Notify.failure(err.message))
@@ -30,10 +31,9 @@ async function onSearc(event) {
    
 }
 formEl.addEventListener('submit', onSearc);
-
+buttonLoadEl.addEventListener('click', onLoader);
 
 function createDomEl(arrayData) { 
-    resultPage += 1;
   galleryEl.innerHTML = arrayData.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
     `<div class="photo-card">
         <a class="gallery__link" href="${largeImageURL}"  ><img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" /></a>
@@ -59,9 +59,15 @@ function createDomEl(arrayData) {
     captionsData: 'alt', 
     captionPosition: 'bottom', 
     captionDelay: 250, 
-});
-  
-    
+  });
+}
+
+async function onLoader() {
+    resultPage += 1;
+    await getSearch(formValue, resultPage).then(data => {
+        const arrayData = data.data.hits;
+        createDomEl(arrayData);
+    })
 }
 
 

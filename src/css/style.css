@@ -10,6 +10,19 @@
     --animation-duration: 250ms;
 }
 
+.search-form {
+    width: 100%;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    box-shadow: 0px 11px 16px 0px rgba(0, 0, 0, 0.65);
+    -webkit-box-shadow: 0px 11px 16px 0px rgba(0, 0, 0, 0.65);
+    -moz-box-shadow: 0px 11px 16px 0px rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: center;
+    background-color: aqua;
+}
+
 .gallery {
     display: grid;
     max-width: 1140px;
