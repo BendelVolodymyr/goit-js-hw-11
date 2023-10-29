@@ -55,10 +55,7 @@ function test(arrayData) {
 </div>`).join('');
 }
 
-function createDomEl(arrayData) { 
-  createNewDomEl = test(arrayData);
-  galleryEl.innerHTML = test(arrayData);
-  
+const simpleBox = () => {
   var lightbox = new SimpleLightbox('.gallery a', {
     sourceAttr: 'href',
     overlayOpacity: 0.4, 
@@ -69,12 +66,20 @@ function createDomEl(arrayData) {
   });
 }
 
+function createDomEl(arrayData) { 
+  createNewDomEl = test(arrayData);
+  galleryEl.innerHTML = test(arrayData);
+  simpleBox();
+  
+}
+
 async function onLoader() {
     resultPage += 1;
     await getSearch(formValue, resultPage).then(data => {
         const arrayData = data.data.hits;
       createNewDomEl += test(arrayData);
       galleryEl.innerHTML = createNewDomEl;
+      simpleBox();
     })
 }
 
