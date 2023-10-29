@@ -14,6 +14,7 @@ let resultPage = 1;
 let formValue = '';
 let createNewDomEl = '';
 let arrayDataLength = 0;
+let totalHits = 0;
 
  var lightbox = new SimpleLightbox('.gallery a', {
     sourceAttr: 'href',
@@ -30,14 +31,21 @@ async function onSearc(event) {
     if (formValue.length == 0) return alert('Форма не може бути пуста');
   resultPage = 1;
   arrayDataLength = 0;
+  totalHits = 0;
     await getSearch(formValue, resultPage).then(data => {
       const arrayData = data.data.hits;
       arrayDataLength += arrayData.length;
-      const totalHits = data.data.totalHits;
+      totalHits = data.data.totalHits;
     if (arrayData.length == 0) return Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.");
     Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-        createDomEl(arrayData);
-        buttonLoadEl.classList.remove('is-hidden');
+      createDomEl(arrayData);
+      if (arrayDataLength >= totalHits) {
+        buttonLoadEl.classList.add('is-hidden');
+         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+      } else {
+      buttonLoadEl.classList.remove('is-hidden');
+      }
+        
 }
 )
     .catch(err => Notiflix.Notify.failure(err.message))
@@ -81,12 +89,13 @@ async function onLoader() {
     await getSearch(formValue, resultPage).then(data => {
       const arrayData = data.data.hits;
       arrayDataLength += arrayData.length;
-      console.log(arrayDataLength)
-      const totalHits = data.data.totalHits;
-      console.log()
       createNewDomEl += test(arrayData);
       galleryEl.innerHTML = createNewDomEl;
       lightbox.refresh();
+      if (arrayDataLength >= totalHits) {
+        buttonLoadEl.classList.add('is-hidden');
+        Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+      } 
     })
 }
 
