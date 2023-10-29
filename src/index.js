@@ -13,16 +13,29 @@ const galleryEl = document.querySelector('.gallery');
 let resultPage = 1;
 let formValue = '';
 let createNewDomEl = '';
+let arrayDataLength = 0;
+
+ var lightbox = new SimpleLightbox('.gallery a', {
+    sourceAttr: 'href',
+    overlayOpacity: 0.4, 
+    animationSpeed: 500, 
+    captionsData: 'alt', 
+    captionPosition: 'bottom', 
+    captionDelay: 250, 
+  });
 
 async function onSearc(event) {
     event.preventDefault();
      formValue = formEl.elements.searchQuery.value;
     if (formValue.length == 0) return alert('Форма не може бути пуста');
-    resultPage = 1;
+  resultPage = 1;
+  arrayDataLength = 0;
     await getSearch(formValue, resultPage).then(data => {
-        const arrayData = data.data.hits;
+      const arrayData = data.data.hits;
+      arrayDataLength += arrayData.length;
+      const totalHits = data.data.totalHits;
     if (arrayData.length == 0) return Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.");
-    Notiflix.Notify.success('Success: Photo found');
+    Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
         createDomEl(arrayData);
         buttonLoadEl.classList.remove('is-hidden');
 }
@@ -33,6 +46,8 @@ async function onSearc(event) {
 }
 formEl.addEventListener('submit', onSearc);
 buttonLoadEl.addEventListener('click', onLoader);
+
+
 
 function test(arrayData) {
  return arrayData.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
@@ -55,31 +70,23 @@ function test(arrayData) {
 </div>`).join('');
 }
 
-const simpleBox = () => {
-  var lightbox = new SimpleLightbox('.gallery a', {
-    sourceAttr: 'href',
-    overlayOpacity: 0.4, 
-    animationSpeed: 500, 
-    captionsData: 'alt', 
-    captionPosition: 'bottom', 
-    captionDelay: 250, 
-  });
-}
-
 function createDomEl(arrayData) { 
   createNewDomEl = test(arrayData);
   galleryEl.innerHTML = test(arrayData);
-  simpleBox();
-  
+  lightbox.refresh();  
 }
 
 async function onLoader() {
     resultPage += 1;
     await getSearch(formValue, resultPage).then(data => {
-        const arrayData = data.data.hits;
+      const arrayData = data.data.hits;
+      arrayDataLength += arrayData.length;
+      console.log(arrayDataLength)
+      const totalHits = data.data.totalHits;
+      console.log()
       createNewDomEl += test(arrayData);
       galleryEl.innerHTML = createNewDomEl;
-      simpleBox();
+      lightbox.refresh();
     })
 }
 
