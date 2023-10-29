@@ -10,6 +10,45 @@
     --animation-duration: 250ms;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    padding: 10px;
+    font-size: 19px;
+    text-align: center;
+    justify-content: center;
+    border-width: 7px;
+    border-radius: 15px;
+    border-style: double;
+    border-color: rgb(104, 104, 104);
+    box-shadow: 0px 0px 10px 0px rgba(40, 39, 40, 0.76);
+}
+
+.load-more {}
+
+input {
+    padding: 10px;
+    font-size: 19px;
+    text-align: center;
+    border-width: 7px;
+    border-radius: 15px;
+    border-style: double;
+    border-color: rgb(104, 104, 104);
+    box-shadow: 0px 0px 10px 0px rgba(40, 39, 40, 0.76);
+    text-shadow: 0px 0px 8px rgba(42, 42, 42, .75);
+    font-style: none;
+    font-family: monospace;
+    font-weight: normal;
+}
+
+input:focus {
+    outline: none;
+}
+
+
 .search-form {
     width: 100%;
     padding: 20px 0;
@@ -20,7 +59,7 @@
     -moz-box-shadow: 0px 11px 16px 0px rgba(0, 0, 0, 0.65);
     display: flex;
     justify-content: center;
-    background-color: aqua;
+    background-color: rgb(237, 197, 252);
 }
 
 .gallery {
